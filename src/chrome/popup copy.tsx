@@ -9,36 +9,41 @@ import {
   Checkbox,
   FormControlLabel,
   Button,
+  List,
+  ListItem,
 } from "@mui/material";
 import Logo from "../components/Logo";
 import "./common.css";
 
-const Popup = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [tone, setTone] = useState("");
-  const [useEmojis, setUseEmojis] = useState(false);
-  const [useLink, setUseLink] = useState(false);
-  const [endWithQuestion, setEndWithQuestion] = useState(false);
+import { emojis, tones } from "../utils/constants";
+import useChromeStorage from "../hooks/useChromeStorage";
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log({
-      searchQuery,
-      tone,
-      useEmojis,
-      useLink,
-      endWithQuestion,
-    });
-  };
+const Popup = () => {
+  const [searchQuery, setSearchQuery, { loading: searchQueryLoading }] =
+    useChromeStorage<string>("tbg-search-query", "");
+  const [tone, setTone, { loading: toneLoading }] = useChromeStorage<string>(
+    "tbg-tone",
+    tones[0]
+  );
+  const [useEmoji, setUseEmoji, { loading: useEmojiLoading }] =
+    useChromeStorage<boolean>("tbg-use-emojis", false);
+  const [useLink, setUseLink, { loading: useLinkLoading }] =
+    useChromeStorage<boolean>("tbg-use-link", false);
+  const [
+    endWithQuestion,
+    setEndWithQuestion,
+    { loading: endWithQuestionLoading },
+  ] = useChromeStorage<boolean>("tbg-end-with-question", false);
 
   return (
     <div>
       <Logo className="logo" />
-      <form onSubmit={handleSubmit}>
+      <form>
         <TextField
           label="Search Query"
           variant="outlined"
           value={searchQuery}
+          disabled={searchQueryLoading}
           onChange={e => setSearchQuery(e.target.value)}
           fullWidth
           margin="normal"
@@ -47,64 +52,58 @@ const Popup = () => {
           <InputLabel>Tone</InputLabel>
           <Select
             value={tone}
+            disabled={toneLoading}
             onChange={e => setTone(e.target.value)}
             label="Tone"
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {[
-              "🎉 Excited",
-              "😄 Happy",
-              "🤗 Gracious",
-              "👏 Supportive",
-              "🙏 Polite",
-              "🤔 Respectful",
-              "😈 Provocative",
-              "🤯 Controversial",
-              "😔 Disappointed",
-              "😢 Sad",
-              "😤 Frustrated",
-              "😏 Sarcastic",
-              "😡 Angry",
-              "😠 Nasty",
-            ].map(option => (
+            {tones.map(option => (
               <MenuItem key={option} value={option}>
-                {option}
+                {emojis[option]} {option}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={useEmojis}
-              onChange={e => setUseEmojis(e.target.checked)}
+        <List>
+          <ListItem style={{ padding: "0px 0px 0px 4px" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={useEmoji}
+                  disabled={useEmojiLoading}
+                  onChange={e => setUseEmoji(e.target.checked)}
+                />
+              }
+              label="Use Emojis"
             />
-          }
-          label="Use Emojis"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={useLink}
-              onChange={e => setUseLink(e.target.checked)}
+          </ListItem>
+          <ListItem style={{ padding: "0px 0px 0px 4px" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={useLink}
+                  disabled={useLinkLoading}
+                  onChange={e => setUseLink(e.target.checked)}
+                />
+              }
+              label="Use Link"
             />
-          }
-          label="Use Link"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={endWithQuestion}
-              onChange={e => setEndWithQuestion(e.target.checked)}
+          </ListItem>
+          <ListItem style={{ padding: "0px 0px 0px 4px" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={endWithQuestion}
+                  disabled={endWithQuestionLoading}
+                  onChange={e => setEndWithQuestion(e.target.checked)}
+                />
+              }
+              label="End with Question"
             />
-          }
-          label="End with Question"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Submit
-        </Button>
+          </ListItem>
+        </List>
       </form>
     </div>
   );

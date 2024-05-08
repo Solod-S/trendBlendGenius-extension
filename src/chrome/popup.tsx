@@ -1,150 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import {
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-  FormControlLabel,
-  Button,
-  List,
-  ListItem,
-} from "@mui/material";
-import Logo from "../components/Logo";
-import "./common.css";
+import { Provider } from "react-redux";
+import store from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/rootReducer";
+import { login } from "../redux/auth/authActions";
 
-interface Emojis {
-  [key: string]: string;
-}
+const Popup: React.FC = () => {
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
-const emojis: Emojis = {
-  Excited: "🎉",
-  Happy: "😄",
-  Gracious: "🤗",
-  Supportive: "👏",
-  Polite: "🙏",
-  Respectful: "🤔",
-  Provocative: "😈",
-  Controversial: "🤯",
-  Disappointed: "😔",
-  Sad: "😢",
-  Frustrated: "😤",
-  Sarcastic: "😏",
-  Angry: "😡",
-  Nasty: "😠",
-};
-const tones = [
-  "Excited",
-  "Happy",
-  "Gracious",
-  "Supportive",
-  "Polite",
-  "Respectful",
-  "Provocative",
-  "Controversial",
-  "Disappointed",
-  "Sad",
-  "Frustrated",
-  "Sarcastic",
-  "Angry",
-  "Nasty",
-];
-
-const Popup = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [tone, setTone] = useState(tones[0]);
-  const [useEmojis, setUseEmojis] = useState(false);
-  const [useLink, setUseLink] = useState(false);
-  const [endWithQuestion, setEndWithQuestion] = useState(false);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log({
-      searchQuery,
-      tone,
-      useEmojis,
-      useLink,
-      endWithQuestion,
-    });
+  const handleLogin = async () => {
+    try {
+      await dispatch(
+        login({ email: "example@example.com", password: "password123" })
+      );
+    } catch (error) {
+      // Обработка ошибок
+    }
   };
 
   return (
     <div>
-      <Logo className="logo" />
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Search Query"
-          variant="outlined"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-        <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Tone</InputLabel>
-          <Select
-            value={tone}
-            onChange={e => setTone(e.target.value)}
-            label="Tone"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {tones.map(option => (
-              <MenuItem key={option} value={option}>
-                {emojis[option]} {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <List>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={useEmojis}
-                  onChange={e => setUseEmojis(e.target.checked)}
-                />
-              }
-              label="Use Emojis"
-            />
-          </ListItem>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={useLink}
-                  onChange={e => setUseLink(e.target.checked)}
-                />
-              }
-              label="Use Link"
-            />
-          </ListItem>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={endWithQuestion}
-                  onChange={e => setEndWithQuestion(e.target.checked)}
-                />
-              }
-              label="End with Question"
-            />
-          </ListItem>
-        </List>
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
-      </form>
+      {/* Добавьте форму для входа пользователя */}
+      <button onClick={handleLogin}>Войти</button>
     </div>
   );
 };
 
+export default Popup;
+
 ReactDOM.render(
   <React.StrictMode>
-    <Popup />
+    <Provider store={store}>
+      <Popup />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
