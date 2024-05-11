@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/rootReducer";
-import { login } from "../redux/auth/authActions";
+import { RootState } from "../../redux/rootReducer";
+import { login } from "../../redux/auth/authActions";
 import { Button, TextField, CircularProgress } from "@mui/material";
-import Logo from "../components/Logo";
-import { LoginFormType } from "../redux/auth/authTypes";
+import Logo from "../../components/Logo";
+import { LoginFormType } from "../../redux/auth/authTypes";
 
-const AuthForm: React.FC = () => {
+export const AuthPage: React.FC = () => {
   const dispatch = useDispatch();
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
   const [formData, setFormData] = useState<LoginFormType>({
@@ -22,7 +18,7 @@ const AuthForm: React.FC = () => {
     try {
       dispatch(login(formData));
     } catch (error) {
-      // Обработка ошибок
+      console.log(`error`, error);
     }
   };
 
@@ -69,16 +65,3 @@ const AuthForm: React.FC = () => {
     </div>
   );
 };
-
-export default AuthForm;
-
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <AuthForm />
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);

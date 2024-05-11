@@ -1,39 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import store from "../redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/rootReducer";
-import { login } from "../redux/auth/authActions";
+import { LoginUserResponseType } from "../redux/auth/authTypes";
+import { SettingsPage } from "../pages/SettingsPage/SettingsPage";
+import { AuthPage } from "../pages/AuthPage/AuthPage";
 
-const Popup: React.FC = () => {
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+const App: React.FC = ({ children }) => {
+  const [userData, setUserData] = useState<LoginUserResponseType | null>(null);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  const handleLogin = async () => {
-    try {
-      await dispatch(
-        login({ email: "example@example.com", password: "password123" })
-      );
-    } catch (error) {
-      // Обработка ошибок
-    }
-  };
-
-  return (
-    <div>
-      {/* Добавьте форму для входа пользователя */}
-      <button onClick={handleLogin}>Войти</button>
-    </div>
-  );
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
+  return user ? <SettingsPage userData={user} /> : <AuthPage />;
 };
-
-export default Popup;
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Popup />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
