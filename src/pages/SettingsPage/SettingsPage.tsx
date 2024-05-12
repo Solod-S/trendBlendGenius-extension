@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../../redux/auth/authActions";
-import { LoginUserResponseType } from "../../redux/auth/authTypes";
+import { logout, update } from "../../redux/user/userActions";
+import { User } from "../../redux/user/userTypes";
 import {
   TextField,
   FormControl,
@@ -20,7 +20,7 @@ import "../../../src/chrome/common.css";
 import { emojis, tones } from "../../utils/constants";
 
 export const SettingsPage: React.FC<{
-  userData: LoginUserResponseType | null;
+  userData: User;
 }> = ({ userData }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [tone, setTone] = useState<string>("");
@@ -47,6 +47,7 @@ export const SettingsPage: React.FC<{
 
   const handleFormData = () => {
     const formData = {
+      id: userData.id,
       query: searchQuery,
       tone,
       useEmojis: useEmoji,
@@ -54,6 +55,7 @@ export const SettingsPage: React.FC<{
       endWithQuestion,
     };
     console.log(formData);
+    dispatch(update(formData));
   };
 
   return (

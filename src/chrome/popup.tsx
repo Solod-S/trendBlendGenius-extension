@@ -5,18 +5,18 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/rootReducer";
-import { LoginUserResponseType } from "../redux/auth/authTypes";
+import { User } from "../redux/user/userTypes";
 import { SettingsPage } from "../pages/SettingsPage/SettingsPage";
 import { AuthPage } from "../pages/AuthPage/AuthPage";
 
 const App: React.FC = ({ children }) => {
-  const [userData, setUserData] = useState<LoginUserResponseType | null>(null);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const [userData, setUserData] = useState<User | null>(null);
+  const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     setUserData(user);
   }, [user]);
-  return user ? <SettingsPage userData={user} /> : <AuthPage />;
+  return userData ? <SettingsPage userData={userData} /> : <AuthPage />;
 };
 
 ReactDOM.render(

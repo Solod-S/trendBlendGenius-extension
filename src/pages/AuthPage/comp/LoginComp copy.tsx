@@ -1,28 +1,36 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/rootReducer";
-import { login } from "../redux/auth/authActions";
-import { Button, TextField, CircularProgress } from "@mui/material";
-import Logo from "../components/Logo";
-import { LoginFormType } from "../redux/auth/authTypes";
+import { RootState } from "../../../redux/rootReducer";
+import { login } from "../../../redux/user/userActions";
+import { Close } from "@mui/icons-material";
+import {
+  Button,
+  TextField,
+  CircularProgress,
+  Snackbar,
+  SnackbarContent,
+  IconButton,
+} from "@mui/material";
+import Logo from "../../../components/Logo";
+import { LoginFormType } from "../../../redux/user/userTypes";
 
-const AuthForm: React.FC = () => {
+export const LoginComp: React.FC = () => {
   const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+  const { isLoading, error } = useSelector((state: RootState) => state.user);
   const [formData, setFormData] = useState<LoginFormType>({
     email: "",
     password: "",
   });
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleLogin = async () => {
     try {
       dispatch(login(formData));
-    } catch (error) {
-      // Обработка ошибок
+    } catch (error: any) {
+      setOpen(true);
+      setMessage(error);
+      console.log(`error`, error);
     }
   };
 
@@ -65,20 +73,31 @@ const AuthForm: React.FC = () => {
           {isLoading ? <CircularProgress size={24} /> : "Login"}
         </Button>
       </form>
-      {error && <p>{error}</p>}
+      {/* {error && <p>{error}</p>}
+       */}
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => setOpen(false)}
+      >
+        <SnackbarContent
+          style={{ backgroundColor: "red" }}
+          message={error}
+          action={
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={() => setOpen(false)}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          }
+        />
+      </Snackbar>
     </div>
   );
 };
-
-export default AuthForm;
-
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <AuthForm />
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);

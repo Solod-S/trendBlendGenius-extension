@@ -1,67 +1,53 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { login } from "../../redux/auth/authActions";
-import { Button, TextField, CircularProgress } from "@mui/material";
-import Logo from "../../components/Logo";
-import { LoginFormType } from "../../redux/auth/authTypes";
+import { Tabs, Tab, Box, Typography } from "@mui/material";
+import { LoginComp } from "./comp/LoginComp";
+import { RegisterComp } from "./comp/RegisterComp";
 
 export const AuthPage: React.FC = () => {
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state: RootState) => state.auth);
-  const [formData, setFormData] = useState<LoginFormType>({
-    email: "",
-    password: "",
-  });
+  const [activeTab, setActiveTab] = useState<number>(0);
 
-  const handleLogin = async () => {
-    try {
-      dispatch(login(formData));
-    } catch (error) {
-      console.log(`error`, error);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
   };
 
   return (
-    <div style={{ paddingBottom: "20px" }}>
-      <Logo className="logo" />
-      <form style={{ textAlign: "center" }}>
-        <TextField
-          name="email"
-          label="Email"
-          value={formData.email}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          style={{ marginBottom: "20px" }}
-          name="password"
-          type="password"
-          label="Password"
-          value={formData.password}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleLogin}
-          disabled={isLoading}
-        >
-          {isLoading ? <CircularProgress size={24} /> : "Login"}
-        </Button>
-      </form>
-      {error && <p>{error}</p>}
+    <Box sx={{ width: "100%" }}>
+      <Tabs value={activeTab} onChange={handleTabChange} centered>
+        <Tab label="Login" />
+        <Tab label="Register" />
+      </Tabs>
+      <TabPanel value={activeTab} index={0}>
+        <LoginComp />
+      </TabPanel>
+      <TabPanel value={activeTab} index={1}>
+        <RegisterComp />
+      </TabPanel>
+    </Box>
+  );
+};
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const TabPanel: React.FC<TabPanelProps> = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
     </div>
   );
 };

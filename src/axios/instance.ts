@@ -11,3 +11,12 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const instanceToken = {
+  set(token: string) {
+    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+  },
+  unset() {
+    instance.defaults.headers.common.Authorization = "";
+  },
+};
