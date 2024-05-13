@@ -1,4 +1,4 @@
-export const CHATGPT_BTN_ID = "chatgpt-btn";
+export const CHATGPT_BTN_ID = "trendBlendGenius-btn";
 
 interface Emojis {
   [key: string]: string;
@@ -36,4 +36,21 @@ export const tones = [
   "Sarcastic",
   "Angry",
   "Nasty",
+];
+
+export const ERROR_MESSAGE =
+  "Trend Blend Genius failed. Follow the instructions & try again.";
+
+export enum Domains {
+  LinkedIn = "linkedin.com",
+  // Facebook = "facebook.com",
+  // Instagram = "instagram.com",
+  // Twitter = "twitter.com",
+}
+
+export const ALLOWED_DOMAINS: Domains[] = [
+  Domains.LinkedIn,
+  // Domains.Facebook,
+  // Domains.Instagram,
+  // Domains.Twitter,
 ];

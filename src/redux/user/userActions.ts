@@ -34,6 +34,7 @@ export const logout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
     console.log(`logout response`, response);
     return true;
   } catch (error: any) {
+    instanceToken.unset();
     return thunkAPI.rejectWithValue(error.response.data.message);
     // error.message
   }
@@ -72,6 +73,7 @@ export const update = createAsyncThunk<
 
     return result;
   } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+    console.log(`error`, error);
+    return thunkAPI.rejectWithValue(error);
   }
 });

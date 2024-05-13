@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout, update } from "../../redux/user/userActions";
 import { User } from "../../redux/user/userTypes";
 import {
@@ -13,22 +13,56 @@ import {
   Button,
   List,
   ListItem,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Logo from "../../components/Logo";
 import "../../../src/chrome/common.css";
 
 import { emojis, tones } from "../../utils/constants";
+import { clearError, clearNotify } from "../../redux/user/userSlice";
+import { RootState } from "../../redux/rootReducer";
+import { LocalActivity } from "@mui/icons-material";
+import { instanceToken } from "../../axios/instance";
 
 export const SettingsPage: React.FC<{
   userData: User;
 }> = ({ userData }) => {
+  const dispatch = useDispatch();
+  const { isLoading, error, notify, accessToken } = useSelector(
+    (state: RootState) => state.user
+  );
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [tone, setTone] = useState<string>("");
   const [useEmoji, setUseEmoji] = useState<boolean>(false);
   const [useLink, setUseLink] = useState<boolean>(false);
   const [endWithQuestion, setEndWithQuestion] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [errorNotify, setErrorNotify] = useState(true);
+
+  useEffect(() => {
+    instanceToken.set(accessToken);
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (error && error.length > 0) {
+      setErrorNotify(true);
+      setMessage(error);
+      setOpen(true);
+      dispatch(clearError());
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (notify) {
+      setErrorNotify(false);
+      setMessage(notify);
+      setOpen(true);
+      dispatch(clearNotify());
+    }
+  }, [notify]);
 
   useEffect(() => {
     if (userData) {
@@ -54,7 +88,6 @@ export const SettingsPage: React.FC<{
       useLink,
       endWithQuestion,
     };
-    console.log(formData);
     dispatch(update(formData));
   };
 
@@ -126,6 +159,7 @@ export const SettingsPage: React.FC<{
               variant="contained"
               color="primary"
               onClick={handleFormData}
+              disabled={isLoading}
             >
               Save
             </Button>
@@ -135,6 +169,24 @@ export const SettingsPage: React.FC<{
           </ListItem>
         </List>
       </form>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert
+          onClose={() => setOpen(false)}
+          severity={errorNotify ? "error" : "success"}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

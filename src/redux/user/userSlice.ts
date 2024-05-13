@@ -45,7 +45,6 @@ const userSlice = createSlice({
           (action.payload as string) ||
           (action.error?.message as string) ||
           "Login failed";
-        // state.error = action.error.message ?? "Login failed";
       })
       .addCase(UserOperations.create.pending, state => {
         console.log(`create.pending`);
@@ -77,7 +76,7 @@ const userSlice = createSlice({
         state.accessToken = "";
       })
       .addCase(UserOperations.logout.rejected, (state, action) => {
-        console.log(`logout.rejected`, action.error.message);
+        console.log(`logout.rejected`);
         state.isLoading = false;
         state.user = null;
         state.accessToken = "";
@@ -93,11 +92,14 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
+        state.notify = "The data was successfully updated";
       })
       .addCase(UserOperations.update.rejected, (state, action) => {
-        console.log(`update.rejected`, action.error.message);
+        // console.log(`update.rejected`, action.payload.response.data.message);
         state.isLoading = false;
-        state.error = action.error.message ?? "Update failed";
+        state.error =
+          (action.payload as { response: { data: { message: string } } })
+            .response?.data?.message || "Error occurred during update";
       });
   },
 });
