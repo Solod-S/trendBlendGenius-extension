@@ -46,7 +46,8 @@
 
   "host_permissions": [
     "https://social-comments-gpt-site.vercel.app/",
-    "https://social-comments-gpt.com/"
+    "https://social-comments-gpt.com/",
+    "https://localhost:1234/api/*"
   ],
 
   "background": {

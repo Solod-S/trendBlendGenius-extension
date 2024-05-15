@@ -7,6 +7,7 @@ import {
   UserResponseType,
 } from "./userTypes";
 import { RootState } from "../rootReducer";
+import { setStorageValues } from "../../utils/chromeStorageOperations";
 
 export const login = createAsyncThunk<
   UserResponseType,
@@ -19,6 +20,7 @@ export const login = createAsyncThunk<
       accessToken: response.data.accessToken,
       user: response.data.user,
     };
+    setStorageValues(result);
     instanceToken.set(response.data.accessToken);
     return result;
   } catch (error: any) {
@@ -31,6 +33,7 @@ export const logout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
   try {
     const response = await instance.get("/auth/logout");
     instanceToken.unset();
+    setStorageValues({ user: null, accessToken: "" });
     console.log(`logout response`, response);
     return true;
   } catch (error: any) {
@@ -69,8 +72,8 @@ export const update = createAsyncThunk<
       accessToken: response.data.accessToken,
       user: response.data.user,
     };
+    setStorageValues(result);
     console.log(`update response`, result);
-
     return result;
   } catch (error: any) {
     console.log(`error`, error);

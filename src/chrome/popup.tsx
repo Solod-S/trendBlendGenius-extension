@@ -11,11 +11,16 @@ import { AuthPage } from "../pages/AuthPage/AuthPage";
 
 const App: React.FC = ({ children }) => {
   const [userData, setUserData] = useState<User | null>(null);
-  const user = useSelector((state: RootState) => state.user.user);
+  const { user, accessToken } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     setUserData(user);
-  }, [user]);
+    // chrome.runtime.sendMessage({
+    //   action: "save-to-storage",
+    //   data: { user: user || "", accessToken: accessToken || "" },
+    // });
+  }, [user, accessToken]);
+
   return userData ? <SettingsPage userData={userData} /> : <AuthPage />;
 };
 
