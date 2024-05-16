@@ -64,8 +64,12 @@ export const handler = async () => {
     const article = await sendMessageToBackground({
       action: "createArticle",
       domain: "linkedin.com",
+      token: config["tbg-access-token"],
     });
-    // const article = await createArticle("linkedin.com");
+    // const article = await createArticle(
+    //   "linkedin.com",
+    //   config["tbg-access-token"]
+    // );
     const comment = "Okay";
     if (comment.length) {
       commentInputEl.innerHTML = comment;

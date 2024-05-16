@@ -20,6 +20,15 @@ export const login = createAsyncThunk<
       accessToken: response.data.accessToken,
       user: response.data.user,
     };
+    // const headers = instance.defaults.headers;
+    // console.log(`headers`, headers);
+    // // Check if the headers contain a Cookie header
+    // if (headers && headers.Cookie) {
+    //   // Print out the Cookie header value
+    //   console.log("Cookies attached to Axios instance:", headers.Cookie);
+    // } else {
+    //   console.log("No cookies attached to Axios instance.");
+    // }
     setStorageValues(result);
     instanceToken.set(response.data.accessToken);
     return result;

@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === "createArticle") {
     try {
       console.log("Create article");
-      const article = await createArticle(message.domain);
+      const article = await createArticle(message.domain, message.token);
       sendResponse("createArticle");
     } catch (error: any) {
       sendResponse({ error: error.message });
