@@ -58,6 +58,7 @@ export const create = createAsyncThunk<
   { state: RootState }
 >("user/register", async (credentials, thunkAPI) => {
   try {
+    console.log(`credentials`, credentials);
     const response = await instance.post("/auth/register", {
       passwordRepet: credentials.password,
       ...credentials,

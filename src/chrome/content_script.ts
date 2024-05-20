@@ -1,5 +1,6 @@
 import { ALLOWED_DOMAINS, Domains } from "../utils/constants";
 import appendStyles from "../lib/styles";
+import { Notyf } from "notyf";
 
 import {
   injector as linkedInInjector,
@@ -9,6 +10,23 @@ import {
 const service: Record<Domains, [() => void, () => Promise<void>]> = {
   [Domains.LinkedIn]: [linkedInInjector, linkedInHandler],
 };
+
+export let notyf = new Notyf({
+  types: [
+    {
+      type: "optionPageSuccess",
+      background: "#225FBE",
+      icon: false,
+      className: "custom-notyf",
+    },
+    {
+      type: "optionPageWarning",
+      background: "#FBBC05",
+      icon: false,
+      className: "custom-notyf",
+    },
+  ],
+});
 
 (() => {
   const hostname = window.location.hostname;

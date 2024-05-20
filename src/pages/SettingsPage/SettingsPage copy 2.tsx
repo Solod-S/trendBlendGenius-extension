@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, update } from "../../redux/user/userActions";
 import { User } from "../../redux/user/userTypes";
-
 import {
   TextField,
   FormControl,
@@ -16,15 +15,15 @@ import {
   ListItem,
   Snackbar,
   Alert,
-  Box,
 } from "@mui/material";
 import Logo from "../../components/Logo";
 import "../../../src/chrome/common.css";
+import { LocalActivity, Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { emojis, tones } from "../../utils/constants";
 import { clearError, clearNotify } from "../../redux/user/userSlice";
 import { RootState } from "../../redux/rootReducer";
-
+// import { LocalActivity } from "@mui/icons-material";
 import { instanceToken } from "../../axios/instance";
 
 export const SettingsPage: React.FC<{
@@ -35,15 +34,13 @@ export const SettingsPage: React.FC<{
     (state: RootState) => state.user
   );
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [openAIkey, setOpenAIkey] = useState<string>("");
-  const [newsApiKey, setNewsApiKey] = useState<string>("");
+  const [openAIkKey, setOpenAIkKy] = useState<string>("");
+  const [newsAIKey, setNewsAIKey] = useState<string>("");
   const [tone, setTone] = useState<string>("");
   const [useEmoji, setUseEmoji] = useState<boolean>(false);
   const [useLink, setUseLink] = useState<boolean>(false);
   const [endWithQuestion, setEndWithQuestion] = useState<boolean>(false);
 
-  const [showAIKey, setShowAIKey] = useState(false);
-  const [showNewsKey, setShowNewsKey] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [errorNotify, setErrorNotify] = useState(true);
@@ -72,22 +69,12 @@ export const SettingsPage: React.FC<{
 
   useEffect(() => {
     if (userData) {
-      const {
-        query,
-        tone,
-        useEmojis,
-        useLink,
-        endWithQuestion,
-        openAIkey,
-        newsApiKey,
-      } = userData;
+      const { query, tone, useEmojis, useLink, endWithQuestion } = userData;
       setSearchQuery(query ?? "");
       setTone(tone ?? "");
       setUseEmoji(useEmojis ?? false);
       setUseLink(useLink ?? false);
       setEndWithQuestion(endWithQuestion ?? false);
-      setOpenAIkey(openAIkey ?? "");
-      setNewsApiKey(newsApiKey ?? "");
     }
   }, [userData]);
 
@@ -103,15 +90,13 @@ export const SettingsPage: React.FC<{
       useEmojis: useEmoji,
       useLink,
       endWithQuestion,
-      openAIkey,
-      newsApiKey,
     };
     dispatch(update(formData));
   };
 
   return (
-    <div style={{ minWidth: "270px" }}>
-      {/* <Logo className="logo" /> */}
+    <div>
+      <Logo className="logo" />
       <form>
         <TextField
           label="Search Query"
@@ -121,45 +106,24 @@ export const SettingsPage: React.FC<{
           fullWidth
           margin="normal"
         />
-        <Box sx={{ display: "flex", position: "relative" }}>
-          <TextField
-            label="OpenAI key"
-            variant="outlined"
-            type={showAIKey ? "text" : "password"}
-            value={openAIkey}
-            onChange={e => setOpenAIkey(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            onClick={() => {
-              setShowAIKey(!showAIKey);
-            }}
-            sx={{ position: "absolute", right: 0, top: 0, fontSize: "8px" }}
-          >
-            {showAIKey ? "hide" : "show"}
-          </Button>
-        </Box>
-        <Box sx={{ display: "flex", position: "relative" }}>
-          <TextField
-            label="NewsAi key"
-            variant="outlined"
-            type={showNewsKey ? "text" : "password"}
-            value={newsApiKey}
-            onChange={e => setNewsApiKey(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            onClick={() => {
-              setShowNewsKey(!showNewsKey);
-            }}
-            sx={{ position: "absolute", right: 0, top: 0, fontSize: "8px" }}
-          >
-            {showAIKey ? "hide" : "show"}
-          </Button>
-        </Box>
-
+        <TextField
+          label="OpenAI key"
+          variant="outlined"
+          type="password"
+          value={openAIkKey}
+          onChange={e => setOpenAIkKy(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="NewsAi key"
+          variant="outlined"
+          type="password"
+          value={newsAIKey}
+          onChange={e => setNewsAIKey(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
         <FormControl fullWidth variant="outlined" margin="normal">
           <InputLabel>Tone</InputLabel>
           <Select

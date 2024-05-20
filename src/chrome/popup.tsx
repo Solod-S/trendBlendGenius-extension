@@ -15,10 +15,6 @@ const App: React.FC = ({ children }) => {
 
   useEffect(() => {
     setUserData(user);
-    // chrome.runtime.sendMessage({
-    //   action: "save-to-storage",
-    //   data: { user: user || "", accessToken: accessToken || "" },
-    // });
   }, [user, accessToken]);
 
   return userData ? <SettingsPage userData={userData} /> : <AuthPage />;

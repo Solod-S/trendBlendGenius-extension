@@ -1,5 +1,5 @@
 export const CHATGPT_BTN_ID = "trendBlendGenius-btn";
-
+export const TOAST_CLASSNAME = "trendBlendGenius-toast";
 interface Emojis {
   [key: string]: string;
 }

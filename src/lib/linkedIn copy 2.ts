@@ -23,7 +23,9 @@ const handleArticleData = (data: any, config: any) => {
 
 export const injector = () => {
   document
-    .querySelectorAll(".share-creation-state__additional-toolbar")
+    .querySelectorAll(
+      ".share-creation-state__additional-toolbar.share-creation-state__additional-toolbar--no-padding"
+    )
     .forEach(el => {
       if (el.getAttribute("hasTrendBlend") === "true") return;
       el.setAttribute("hasTrendBlend", "true");
@@ -54,7 +56,7 @@ export const handler = async () => {
 
       const commentInputEl = wrapper.querySelector(".ql-editor")!;
       commentInputEl.innerHTML = "";
-      closePreview();
+
       commentInputEl.setAttribute(
         "data-placeholder",
         "Trend Blend Genius is thinking..."
@@ -104,20 +106,4 @@ export const handler = async () => {
       btn?.removeAttribute("loading");
     }
   });
-};
-
-const closePreview = (): void => {
-  const previewContainer = document.querySelector(
-    ".share-creation-state__preview-container"
-  ) as HTMLElement | null;
-
-  if (previewContainer) {
-    const button = previewContainer
-      .querySelector(".artdeco-button__icon")
-      ?.closest("button") as HTMLElement | null;
-
-    if (button) {
-      button.click();
-    }
-  }
 };

@@ -133,6 +133,8 @@ export default () => {
 
     .notyf__wrapper {
       width: 290px !important;
+      z-index: 9999 !important;
+
     }
 
     ${notyfCSS}

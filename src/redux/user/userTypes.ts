@@ -17,6 +17,8 @@ export interface User {
   useEmojis: boolean;
   endWithQuestion: boolean;
   useLink: boolean;
+  openAIkey: string;
+  newsApiKey: string;
 }
 
 export interface UserResponseType {

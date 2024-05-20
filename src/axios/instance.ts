@@ -4,7 +4,7 @@ import fetchAdapter from "konfig-axios-fetch-adapter";
 export const instance = axios.create({
   baseURL: "https://localhost:1234/api",
   withCredentials: true,
-  adapter: fetchAdapter,
+  // adapter: fetchAdapter,
 });
 
 instance.interceptors.response.use(
