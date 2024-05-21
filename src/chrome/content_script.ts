@@ -7,8 +7,13 @@ import {
   handler as linkedInHandler,
 } from "../lib/linkedIn";
 
+import {
+  injector as facebookInInjector,
+  handler as facebookInHandler,
+} from "../lib/facebook";
 const service: Record<Domains, [() => void, () => Promise<void>]> = {
   [Domains.LinkedIn]: [linkedInInjector, linkedInHandler],
+  [Domains.Facebook]: [facebookInInjector, facebookInHandler],
 };
 
 export let notyf = new Notyf({

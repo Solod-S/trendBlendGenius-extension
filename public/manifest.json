@@ -36,7 +36,9 @@
         "*://*.instagram.com/*",
         "*://instagram.com/*",
         "*://*.twitter.com/*",
-        "*://twitter.com/*"
+        "*://twitter.com/*",
+        "*://*.facebook.com/*",
+        "*://facebook.com/*"
       ],
       "js": ["js/vendor.js", "js/content_script.js"]
     }

@@ -24,6 +24,8 @@ export const createArticle = async (domain: string, token: string) => {
   }
 };
 
+export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export const notify = (
   type: string,
   msg: string,

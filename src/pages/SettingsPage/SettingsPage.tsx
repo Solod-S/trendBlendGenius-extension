@@ -135,7 +135,12 @@ export const SettingsPage: React.FC<{
             onClick={() => {
               setShowAIKey(!showAIKey);
             }}
-            sx={{ position: "absolute", right: 0, top: 0, fontSize: "8px" }}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "10px",
+              fontSize: "8px",
+            }}
           >
             {showAIKey ? "hide" : "show"}
           </Button>
@@ -154,7 +159,12 @@ export const SettingsPage: React.FC<{
             onClick={() => {
               setShowNewsKey(!showNewsKey);
             }}
-            sx={{ position: "absolute", right: 0, top: 0, fontSize: "8px" }}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "10px",
+              fontSize: "8px",
+            }}
           >
             {showAIKey ? "hide" : "show"}
           </Button>

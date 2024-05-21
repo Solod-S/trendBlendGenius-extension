@@ -2,9 +2,7 @@ import TrendBlendGeniusIcon from "../components/TrendBlendGeniusIcon";
 
 import { CHATGPT_BTN_ID, Domains, ERROR_MESSAGE } from "../utils/constants";
 import getConfig from "../utils/config";
-import { createArticle, notify } from "../utils/shared";
-
-export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+import { createArticle, delay, notify } from "../utils/shared";
 
 const handleArticleData = (data: any, config: any) => {
   let result =
@@ -20,26 +18,32 @@ const handleArticleData = (data: any, config: any) => {
   if (config["tbg-user-data"].useLink) result += "source: " + data.url;
   return result;
 };
-
 export const injector = () => {
   document
     .querySelectorAll(
-      ".share-creation-state__additional-toolbar.share-creation-state__additional-toolbar--no-padding"
+      '[role="dialog"] form[method="POST"] div[role="presentation"]'
     )
-    .forEach(el => {
-      if (el.getAttribute("hasTrendBlend") === "true") return;
-      el.setAttribute("hasTrendBlend", "true");
+    .forEach(parentElement => {
+      const children = parentElement.children;
+      if (children.length >= 3) {
+        const thirdChild = children[2];
 
-      const chatGPTBtn = document.createElement("button");
-      chatGPTBtn.style.width = "24px";
-      chatGPTBtn.setAttribute("type", "button");
-      chatGPTBtn.setAttribute("id", CHATGPT_BTN_ID);
-      chatGPTBtn.setAttribute(
-        "class",
-        "artdeco-button--tertiary artdeco-button artdeco-button--circle artdeco-button--muted"
-      );
-      chatGPTBtn.innerHTML = TrendBlendGeniusIcon("#666666");
-      el.prepend(chatGPTBtn);
+        if (thirdChild.getAttribute("hasTrendBlend") === "true") return;
+        thirdChild.setAttribute("hasTrendBlend", "true");
+
+        const chatGPTBtn = document.createElement("button");
+        chatGPTBtn.style.border = "none";
+        chatGPTBtn.style.padding = "0px";
+        chatGPTBtn.style.backgroundColor = "transparent";
+        chatGPTBtn.setAttribute("type", "button");
+        chatGPTBtn.setAttribute("id", CHATGPT_BTN_ID);
+        chatGPTBtn.setAttribute(
+          "class",
+          "artdeco-button--tertiary artdeco-button artdeco-button--circle artdeco-button--muted"
+        );
+        chatGPTBtn.innerHTML = TrendBlendGeniusIcon("#666666");
+        thirdChild.prepend(chatGPTBtn);
+      }
     });
 };
 

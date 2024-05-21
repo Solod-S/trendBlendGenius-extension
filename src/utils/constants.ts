@@ -43,14 +43,14 @@ export const ERROR_MESSAGE =
 
 export enum Domains {
   LinkedIn = "linkedin.com",
-  // Facebook = "facebook.com",
+  Facebook = "facebook.com",
   // Instagram = "instagram.com",
   // Twitter = "twitter.com",
 }
 
 export const ALLOWED_DOMAINS: Domains[] = [
   Domains.LinkedIn,
-  // Domains.Facebook,
+  Domains.Facebook,
   // Domains.Instagram,
   // Domains.Twitter,
 ];

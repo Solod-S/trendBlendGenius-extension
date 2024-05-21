@@ -2,9 +2,7 @@ import TrendBlendGeniusIcon from "../components/TrendBlendGeniusIcon";
 
 import { CHATGPT_BTN_ID, Domains, ERROR_MESSAGE } from "../utils/constants";
 import getConfig from "../utils/config";
-import { createArticle, notify } from "../utils/shared";
-
-export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+import { createArticle, delay, notify } from "../utils/shared";
 
 const handleArticleData = (data: any, config: any) => {
   let result =
