@@ -18,6 +18,42 @@ const handleArticleData = (data: any, config: any) => {
   if (config["tbg-user-data"].useLink) result += "source: " + data.url;
   return result;
 };
+
+export const handleInput = async (content: string, wrapper: Element) => {
+  const inputElement = wrapper.querySelector("p");
+
+  if (inputElement) {
+    // Function for highlighting text
+    function selectTargetText(target: Element) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+
+    selectTargetText(inputElement);
+
+    // Wait for the selection to complete before inserting new text
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/plain", content);
+
+    // "beforeinput" event to replace current content
+    inputElement.dispatchEvent(
+      new InputEvent("beforeinput", {
+        inputType: "insertText",
+        data: content,
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+  } else {
+    console.log("Input element not found");
+  }
+};
+
 export const injector = () => {
   document
     .querySelectorAll(
@@ -53,18 +89,13 @@ export const handler = async () => {
     const btn = target?.closest(`#${CHATGPT_BTN_ID}`);
     try {
       if (!btn) return;
-
-      const wrapper = target?.closest(".share-creation-state");
+      const wrapper = target?.closest(`[role="presentation"]`);
 
       if (!wrapper) return;
 
-      const commentInputEl = wrapper.querySelector(".ql-editor")!;
-      commentInputEl.innerHTML = "";
+      const inputEl = wrapper.querySelector(`[role="textbox"]`)!;
 
-      commentInputEl.setAttribute(
-        "data-placeholder",
-        "Trend Blend Genius is thinking..."
-      );
+      if (!inputEl) return;
 
       btn.setAttribute("disabled", "true");
       btn.setAttribute("loading", "true");
@@ -72,13 +103,14 @@ export const handler = async () => {
       const config = await getConfig();
 
       const rawArticleData = await createArticle(
-        "linkedin.com",
+        "facebook.com",
         config["tbg-access-token"]
       );
 
       if (rawArticleData) {
         const preparedArticle = handleArticleData(rawArticleData, config);
-        commentInputEl.innerHTML = preparedArticle;
+
+        handleInput(preparedArticle, inputEl);
         notify(
           "success",
           "The article was successfully created.",
@@ -86,7 +118,6 @@ export const handler = async () => {
           "optionPageSuccess"
         );
       } else {
-        commentInputEl.setAttribute("data-placeholder", ERROR_MESSAGE);
         await delay(3000);
         notify(
           "error",
@@ -95,7 +126,7 @@ export const handler = async () => {
         );
       }
 
-      commentInputEl.setAttribute("data-placeholder", "Add a comment..");
+      inputEl.setAttribute("data-placeholder", "Add a comment..");
       btn.removeAttribute("disabled");
       btn.removeAttribute("loading");
     } catch (error) {

@@ -50,10 +50,12 @@ export const handler = async () => {
 
       if (!wrapper) return;
 
-      const commentInputEl = wrapper.querySelector(".ql-editor")!;
-      commentInputEl.innerHTML = "";
+      const inputEl = wrapper.querySelector(".ql-editor")!;
+      inputEl.innerHTML = "";
+      if (!inputEl) return;
       closePreview();
-      commentInputEl.setAttribute(
+
+      inputEl.setAttribute(
         "data-placeholder",
         "Trend Blend Genius is thinking..."
       );
@@ -70,7 +72,7 @@ export const handler = async () => {
 
       if (rawArticleData) {
         const preparedArticle = handleArticleData(rawArticleData, config);
-        commentInputEl.innerHTML = preparedArticle;
+        inputEl.innerHTML = preparedArticle;
         notify(
           "success",
           "The article was successfully created.",
@@ -78,7 +80,7 @@ export const handler = async () => {
           "optionPageSuccess"
         );
       } else {
-        commentInputEl.setAttribute("data-placeholder", ERROR_MESSAGE);
+        inputEl.setAttribute("data-placeholder", ERROR_MESSAGE);
         await delay(3000);
         notify(
           "error",
@@ -87,7 +89,7 @@ export const handler = async () => {
         );
       }
 
-      commentInputEl.setAttribute("data-placeholder", "Add a comment..");
+      inputEl.setAttribute("data-placeholder", "Add a comment..");
       btn.removeAttribute("disabled");
       btn.removeAttribute("loading");
     } catch (error) {
