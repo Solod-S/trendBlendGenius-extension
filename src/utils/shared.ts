@@ -56,3 +56,14 @@ export const notify = (
     notyf?.success(options);
   }
 };
+
+export const closestSibling = (
+  element: Element,
+  query: string
+): Element | null => {
+  const parent = element.parentElement;
+  if (parent === null) return null;
+  const sibling = parent.querySelector(query);
+  if (sibling !== null) return sibling;
+  return closestSibling(parent, query);
+};

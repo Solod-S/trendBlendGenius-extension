@@ -11,9 +11,16 @@ import {
   injector as facebookInInjector,
   handler as facebookInHandler,
 } from "../lib/facebook";
+
+import {
+  injector as twitterInInjector,
+  handler as twitterInHandler,
+} from "../lib/twitter";
+
 const service: Record<Domains, [() => void, () => Promise<void>]> = {
   [Domains.LinkedIn]: [linkedInInjector, linkedInHandler],
   [Domains.Facebook]: [facebookInInjector, facebookInHandler],
+  [Domains.Twitter]: [twitterInInjector, twitterInHandler],
 };
 
 export let notyf = new Notyf({
