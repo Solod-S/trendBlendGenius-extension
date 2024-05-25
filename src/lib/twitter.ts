@@ -7,24 +7,50 @@ import { delay, closestSibling } from "../utils/shared";
 import { notyf } from "../chrome/content_script";
 
 export const injector = () => {
+  // render btn in home page
   document
-    .querySelectorAll(`[aria-label="Add photos or video"]`)
+    .querySelector(`[aria-label="Home timeline"]`)
+    ?.querySelectorAll(`[data-testid="toolBar"]`)
     .forEach(el => {
-      const pathname = window.location.pathname;
-      if (pathname === "/" || pathname === "/home") return;
-
-      if (el.getAttribute("hasChatGPT") === "true") return;
-      el.setAttribute("hasChatGPT", "true");
-
-      const icon = el?.querySelector("svg");
-      const iconColor = window.getComputedStyle(icon!)?.color || "#8e8e8e";
-
-      el?.insertAdjacentHTML(
-        "beforebegin",
-        `<div id="${CHATGPT_BTN_ID}" role="button" class="twitter">${TrendBlendGeniusIcon(
-          "#666666"
-        )}</div>`
+      const postSpan = Array.from(el.querySelectorAll("span")).find(
+        span => span?.textContent?.trim() === "Post"
       );
+      if (!postSpan) return;
+
+      const nav = el.querySelector("nav");
+      if (!nav) return;
+
+      if (nav.getAttribute("hasTrendBlend") === "true") return;
+      nav.setAttribute("hasTrendBlend", "true");
+      const chatGPTBtn = document.createElement("div");
+      chatGPTBtn.setAttribute("role", "button");
+      chatGPTBtn.setAttribute("id", CHATGPT_BTN_ID);
+      chatGPTBtn.setAttribute("class", "twitter");
+      chatGPTBtn.innerHTML = TrendBlendGeniusIcon("#1D9BF0");
+      nav.prepend(chatGPTBtn);
+    });
+
+  // render btn in modal window
+  document
+    .querySelector(`[aria-labelledby="modal-header"]`)
+    ?.querySelectorAll(`[data-testid="toolBar"]`)
+    .forEach(el => {
+      const postSpan = Array.from(el.querySelectorAll("span")).find(
+        span => span?.textContent?.trim() === "Post"
+      );
+      if (!postSpan) return;
+
+      const nav = el.querySelector("nav");
+      if (!nav) return;
+
+      if (nav.getAttribute("hasTrendBlend") === "true") return;
+      nav.setAttribute("hasTrendBlend", "true");
+      const chatGPTBtn = document.createElement("div");
+      chatGPTBtn.setAttribute("role", "button");
+      chatGPTBtn.setAttribute("id", CHATGPT_BTN_ID);
+      chatGPTBtn.setAttribute("class", "twitter");
+      chatGPTBtn.innerHTML = TrendBlendGeniusIcon("#1D9BF0");
+      nav.prepend(chatGPTBtn);
     });
 };
 

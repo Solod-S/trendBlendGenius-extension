@@ -43,7 +43,7 @@ export let notyf = new Notyf({
 (() => {
   const hostname = window.location.hostname;
   const activeTabDomain = (hostname?.match(
-    /^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/
+    /^(?:.*?\.)?([a-zA-Z0-9\-_]{1,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/
   )?.[1] || "") as Domains;
 
   if (!ALLOWED_DOMAINS.includes(activeTabDomain)) return;
