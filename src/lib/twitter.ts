@@ -2,7 +2,13 @@ import TrendBlendGeniusIcon from "../components/TrendBlendGeniusIcon";
 
 import { CHATGPT_BTN_ID, Domains, ERROR_MESSAGE } from "../utils/constants";
 import getConfig from "../utils/config";
-import { delay, closestSibling } from "../utils/shared";
+import {
+  delay,
+  closestSibling,
+  createArticle,
+  handleArticleData,
+  notify,
+} from "../utils/shared";
 
 import { notyf } from "../chrome/content_script";
 
@@ -58,35 +64,56 @@ export const handler = async () => {
   document.body.addEventListener("click", async e => {
     const target = e.target as Element;
     const btn = target?.closest(`#${CHATGPT_BTN_ID}`);
-    if (!btn) return;
+    try {
+      if (!btn) return;
 
-    const config = await getConfig();
+      notyf?.dismissAll();
 
-    notyf?.dismissAll();
+      const commentInputWrapper = closestSibling(
+        btn,
+        `[class="DraftEditor-root"]`
+      );
+      if (!commentInputWrapper) return;
+      btn.setAttribute("disabled", "true");
+      btn.setAttribute("loading", "true");
+      await setTweetText(commentInputWrapper, " ");
+      const config = await getConfig();
 
-    const commentInputWrapper = closestSibling(
-      btn,
-      `[class="DraftEditor-root"]`
-    );
-    if (!commentInputWrapper) return;
-    setTweetText(commentInputWrapper, "ChatGPT is thinking...");
+      const rawArticleData = await createArticle(
+        "x.com",
+        config["tbg-access-token"]
+      );
 
-    btn.setAttribute("disabled", "true");
-    btn.setAttribute("loading", "true");
-
-    const content =
-      closestSibling(btn, `[data-testid="tweetText"]`)?.textContent || "";
-
-    const comment = "sss";
-    if (comment.length) {
-      setTweetText(commentInputWrapper, comment);
-    } else {
-      await delay(1000);
-      setTweetText(commentInputWrapper, ERROR_MESSAGE);
+      if (rawArticleData) {
+        const preparedArticle = handleArticleData(rawArticleData, config);
+        await setTweetText(commentInputWrapper, preparedArticle);
+        notify(
+          "success",
+          "The article was successfully created.",
+          Domains.Twitter,
+          "optionPageSuccess"
+        );
+      } else {
+        await delay(1000);
+        await setTweetText(commentInputWrapper, ERROR_MESSAGE);
+        notify(
+          "error",
+          "An error was occurred during content generation.",
+          Domains.Twitter
+        );
+      }
+      btn.setAttribute("disabled", "false");
+      btn.setAttribute("loading", "false");
+    } catch (error) {
+      console.log(`error`, error);
+      notify(
+        "error",
+        "An error was occurred during content generation.",
+        Domains.Twitter
+      );
+      btn?.setAttribute("disabled", "false");
+      btn?.setAttribute("loading", "false");
     }
-
-    btn.setAttribute("disabled", "false");
-    btn.setAttribute("loading", "false");
   });
 };
 
@@ -96,7 +123,7 @@ const setTweetText = async (commentInputWrapper: Element, text: string) => {
     document.execCommand("selectAll");
   });
 
-  if (editable?.textContent?.length) {
+  if (editable) {
     (editable as any)?.click();
     editable.dispatchEvent(new CustomEvent("selectAll"));
     await delay(500);

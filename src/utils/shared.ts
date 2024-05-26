@@ -67,3 +67,18 @@ export const closestSibling = (
   if (sibling !== null) return sibling;
   return closestSibling(parent, query);
 };
+
+export const handleArticleData = (data: any, config: any) => {
+  let result =
+    data.title +
+    "\n\n" +
+    data.content +
+    "\n\n" +
+    "image url: " +
+    data.urlToImage +
+    "\n\n";
+  // console.log(`config["tbg-user-data"].`, config["tbg-user-data"].useLink);
+
+  if (config["tbg-user-data"].useLink) result += "source: " + data.url;
+  return result;
+};

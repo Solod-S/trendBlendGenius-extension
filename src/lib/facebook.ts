@@ -2,22 +2,12 @@ import TrendBlendGeniusIcon from "../components/TrendBlendGeniusIcon";
 
 import { CHATGPT_BTN_ID, Domains, ERROR_MESSAGE } from "../utils/constants";
 import getConfig from "../utils/config";
-import { createArticle, delay, notify } from "../utils/shared";
-
-const handleArticleData = (data: any, config: any) => {
-  let result =
-    data.title +
-    "\n\n" +
-    data.content +
-    "\n\n" +
-    "image url: " +
-    data.urlToImage +
-    "\n\n";
-  // console.log(`config["tbg-user-data"].`, config["tbg-user-data"].useLink);
-
-  if (config["tbg-user-data"].useLink) result += "source: " + data.url;
-  return result;
-};
+import {
+  createArticle,
+  delay,
+  handleArticleData,
+  notify,
+} from "../utils/shared";
 
 export const handleInput = async (content: string, wrapper: Element) => {
   const inputElement = wrapper.querySelector("p");
