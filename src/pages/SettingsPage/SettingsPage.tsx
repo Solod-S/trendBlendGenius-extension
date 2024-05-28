@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, update } from "../../redux/user/userActions";
 import { User } from "../../redux/user/userTypes";
-
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import {
   TextField,
   FormControl,
@@ -91,6 +91,10 @@ export const SettingsPage: React.FC<{
     }
   }, [userData]);
 
+  const handleOptions = () => {
+    chrome.runtime.openOptionsPage();
+  };
+
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -113,6 +117,19 @@ export const SettingsPage: React.FC<{
     <div style={{ minWidth: "270px" }}>
       {/* <Logo className="logo" /> */}
       <form>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleOptions}
+            style={{
+              minWidth: "auto", // Уменьшаем минимальную ширину кнопки
+              padding: "0px",
+            }}
+          >
+            <SettingsApplicationsIcon style={{ fontSize: "35px" }} />
+          </Button>
+        </div>
         <TextField
           label="Search Query"
           variant="outlined"
