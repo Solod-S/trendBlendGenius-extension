@@ -36,6 +36,38 @@ const data = [
   createData("24:00"),
 ];
 
+console.log(`data chart`, data);
+const testData = [
+  {
+    time: "Monday",
+    amount: 2,
+  },
+  {
+    time: "Tuesday",
+    amount: 4,
+  },
+  {
+    time: "Wednesday",
+    amount: 6,
+  },
+  {
+    time: "Thursday",
+    amount: 4,
+  },
+  {
+    time: "Friday",
+    amount: 3,
+  },
+  {
+    time: "Saturday",
+    amount: 5,
+  },
+  {
+    time: "Sunday",
+    amount: 3,
+  },
+];
+
 export default function Chart() {
   const theme = useTheme();
 
@@ -44,7 +76,7 @@ export default function Chart() {
       <Title>Today</Title>
       <div style={{ width: "100%", flexGrow: 1, overflow: "hidden" }}>
         <LineChart
-          dataset={data}
+          dataset={testData}
           margin={{
             top: 16,
             right: 20,

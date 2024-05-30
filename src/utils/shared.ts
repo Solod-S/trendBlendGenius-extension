@@ -24,6 +24,37 @@ export const createArticle = async (domain: string, token: string) => {
   }
 };
 
+export const getArticles = async (
+  userId: string,
+  page: number,
+  perPage: number,
+  token: string
+) => {
+  try {
+    const response = await fetch(
+      `https://localhost:1234/api/articles?userId=${userId}&page=${page}&perPage=${perPage}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get articles");
+    }
+
+    const result = await response.json();
+
+    return result.data;
+  } catch (error) {
+    console.error("Error creating article:", error);
+    throw error;
+  }
+};
+
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export const notify = (
