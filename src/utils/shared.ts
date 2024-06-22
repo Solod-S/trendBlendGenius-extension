@@ -55,15 +55,35 @@ export const getArticles = async (
   }
 };
 
-export const getArticlesChart = async (
-  userId: string,
-  page: number,
-  perPage: number,
-  token: string
-) => {
+export const getArticlesChart = async (userId: string, token: string) => {
   try {
     const response = await fetch(
       `https://localhost:1234/api/articles/lastweek?userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get articles");
+    }
+
+    const result = await response.json();
+
+    return result.data;
+  } catch (error) {
+    console.error("Error creating article:", error);
+    throw error;
+  }
+};
+export const getArticlesOverview = async (userId: string, token: string) => {
+  try {
+    const response = await fetch(
+      `https://localhost:1234/api/articles/articles-overview?userId=${userId}`,
       {
         method: "GET",
         headers: {

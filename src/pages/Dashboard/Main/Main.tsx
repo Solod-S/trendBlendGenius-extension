@@ -2,15 +2,23 @@
 
 import React, { useEffect, useState } from "react";
 import Chart from "../comp/Chart";
-import Deposits from "../comp/Deposits";
+import ArticlesOverview from "../comp/ArticlesOverview";
 import LastArticles from "../comp/LastArticles";
 import { Grid, Paper } from "@mui/material";
-import { getArticles, getArticlesChart } from "../../../utils/shared";
+import {
+  getArticles,
+  getArticlesChart,
+  getArticlesOverview,
+} from "../../../utils/shared";
 import getConfig from "../../../utils/config";
 
 export const Main: React.FC<{}> = ({}) => {
   const [articles, setArticles] = useState([]);
   const [articlesChart, setArticlesChart] = useState([]);
+  const [articlesOverview, setArticlesOverview] = useState({
+    totalArticlesCount: 0,
+    monthlyArticlesCount: 0,
+  });
 
   useEffect(() => {
     const fetchDashboardData = async (page: number, perPage: number) => {
@@ -22,14 +30,11 @@ export const Main: React.FC<{}> = ({}) => {
       console.log(`user`, user);
       console.log(`token`, token);
       const newArticles = await getArticles(user.id, page, perPage, token);
-      const newArticlesChart = await getArticlesChart(
-        user.id,
-        page,
-        perPage,
-        token
-      );
+      const newArticlesChart = await getArticlesChart(user.id, token);
+      const newArticlesOverview = await getArticlesOverview(user.id, token);
       if (newArticles?.length > 0) setArticles(newArticles);
       if (newArticlesChart?.length > 0) setArticlesChart(newArticlesChart);
+      if (newArticlesOverview) setArticlesOverview(newArticlesOverview);
     };
 
     fetchDashboardData(1, 10);
@@ -60,7 +65,7 @@ export const Main: React.FC<{}> = ({}) => {
               height: 240,
             }}
           >
-            <Deposits />
+            <ArticlesOverview articlesOverview={articlesOverview} />
           </Paper>
         </Grid>
 
