@@ -2,7 +2,7 @@ import { notyf } from "../chrome/content_script";
 
 export const createArticle = async (domain: string, token: string) => {
   try {
-    const response = await fetch("https://localhost:1234/api/articles/create", {
+    const response = await fetch(`${SERVER_URL}/api/articles/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,6 +23,7 @@ export const createArticle = async (domain: string, token: string) => {
     throw error;
   }
 };
+const SERVER_URL = process.env.SERVER_URL;
 
 export const getArticles = async (
   userId: string,
@@ -32,7 +33,7 @@ export const getArticles = async (
 ) => {
   try {
     const response = await fetch(
-      `https://localhost:1234/api/articles?userId=${userId}&page=${page}&perPage=${perPage}`,
+      `${SERVER_URL}/api/articles?userId=${userId}&page=${page}&perPage=${perPage}`,
       {
         method: "GET",
         headers: {
@@ -58,7 +59,7 @@ export const getArticles = async (
 export const getArticlesChart = async (userId: string, token: string) => {
   try {
     const response = await fetch(
-      `https://localhost:1234/api/articles/lastweek?userId=${userId}`,
+      `${SERVER_URL}/api/articles/lastweek?userId=${userId}`,
       {
         method: "GET",
         headers: {
@@ -83,7 +84,7 @@ export const getArticlesChart = async (userId: string, token: string) => {
 export const getArticlesOverview = async (userId: string, token: string) => {
   try {
     const response = await fetch(
-      `https://localhost:1234/api/articles/articles-overview?userId=${userId}`,
+      `${SERVER_URL}/api/articles/articles-overview?userId=${userId}`,
       {
         method: "GET",
         headers: {

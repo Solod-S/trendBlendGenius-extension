@@ -1,8 +1,9 @@
 import axios from "axios";
 import fetchAdapter from "konfig-axios-fetch-adapter";
+const SERVER_URL = process.env.SERVER_URL;
 
 export const instance = axios.create({
-  baseURL: "https://localhost:1234/api",
+  baseURL: `${SERVER_URL}/api`,
   withCredentials: true,
   // adapter: fetchAdapter,
 });
